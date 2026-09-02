@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Predictive Analytics Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- ================= CSS ================= -->
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        body {
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        /* ===== HEADER ===== */
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #1e1b4b,
+                #4338ca,
+                #7c3aed
+            );
+
+            color: white;
+            padding: 35px 50px;
+        }
+
+
+        .header-content {
+            max-width: 1500px;
+            margin: auto;
+        }
+
+
+        header h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+
+        /* ===== MAIN CONTAINER ===== */
+
+        .container {
+            max-width: 1500px;
+            margin: auto;
+            padding: 30px 40px;
+        }
+
+
+        /* ===== CONTROL PANEL ===== */
+
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+
+            display: grid;
+            grid-template-columns:
+                1fr 1fr 1fr;
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+        }
+
+
+        .control-panel label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+
+        select {
+            width: 100%;
+            padding: 12px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            background: white;
+        }
+
+
+        button {
+            width: 100%;
+            padding: 12px;
+
+            border: none;
+            border-radius: 8px;
+
+            background: #4f46e5;
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        button:hover {
+            background: #3730a3;
+        }
+
+
+        /* ===== KPI GRID ===== */
+
+        .kpi-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .kpi-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+        }
+
+
+        .kpi-icon {
+            width: 50px;
+            height: 50px;
+
+            background: #eef2ff;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 24px;
+        }
+
+
+        .kpi-card h3 {
+            color: #6b7280;
+            font-size: 13px;
+
+            margin-bottom: 6px;
+        }
+
+
+        .kpi-card p {
+            color: #312e81;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        /* ===== CHART CARD ===== */
+
+        .chart-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+
+            margin-bottom: 25px;
+        }
+
+
+        .chart-card h2 {
+            font-size: 19px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .description {
+            color: #6b7280;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* ===== TWO CHARTS ===== */
+
+        .chart-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        /* ===== PERFORMANCE ===== */
+
+        .performance-section {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+        }
+
+
+        .performance-section h2 {
+            margin-bottom: 20px;
+        }
+
+
+        .performance-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap: 18px;
+        }
+
+
+        .performance-card {
+            padding: 20px;
+
+            background: #f5f3ff;
+
+            border-radius: 10px;
+        }
+
+
+        .performance-card span {
+            display: block;
+
+            color: #6b7280;
+
+            margin-bottom: 8px;
+        }
+
+
+        .performance-card strong {
+            display: block;
+
+            font-size: 25px;
+
+            color: #4338ca;
+
+            margin-bottom: 5px;
+        }
+
+
+        .performance-card small {
+            color: #6b7280;
+        }
+
+
+        /* ===== TABLE ===== */
+
+        .table-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+
+            margin-bottom: 25px;
+        }
+
+
+        .table-card h2 {
+            margin-bottom: 18px;
+        }
+
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+
+        th {
+            background: #312e81;
+
+            color: white;
+
+            padding: 14px;
+
+            text-align: left;
+        }
+
+
+        td {
+            padding: 13px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+        }
+
+
+        tr:hover {
+            background: #f5f3ff;
+        }
+
+
+        /* ===== INSIGHTS ===== */
+
+        .insights-section {
+            margin-bottom: 25px;
+        }
+
+
+        .insights-section h2 {
+            margin-bottom: 18px;
+        }
+
+
+        .insights-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2,1fr);
+
+            gap: 18px;
+        }
+
+
+        .insight-card {
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            gap: 15px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+        }
+
+
+        .insight-icon {
+            width: 48px;
+            height: 48px;
+
+            background: #eef2ff;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 22px;
+        }
+
+
+        .insight-card h3 {
+            margin-bottom: 7px;
+        }
+
+
+        .insight-card p {
+            color: #6b7280;
+
+            line-height: 1.5;
+        }
+
+
+        /* ===== FOOTER ===== */
+
+        footer {
+            text-align: center;
+
+            background: white;
+
+            padding: 25px;
+
+            color: #6b7280;
+
+            margin-top: 20px;
+        }
+
+
+        footer p:first-child {
+            font-weight: bold;
+
+            margin-bottom: 5px;
+        }
+
+
+        /* ===== RESPONSIVE ===== */
+
+        @media(max-width:1100px) {
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(3,1fr);
+            }
+
+            .performance-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+        }
+
+
+        @media(max-width:800px) {
+
+            .container {
+                padding: 20px;
+            }
+
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media(max-width:600px) {
+
+            header {
+                padding: 25px 20px;
+            }
+
+            header h1 {
+                font-size: 25px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ===== HEADER ===== -->
+
+    <header>
+
+        <div class="header-content">
+
+            <h1>
+                📈 Predictive Analytics Dashboard
+            </h1>
+
+            <p>
+                Historical Data Analysis & Future
+                Trend Forecasting
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- ===== MAIN CONTENT ===== -->
+
+    <main class="container">
+
+
+        <!-- ===== CONTROLS ===== -->
+
+        <section class="control-panel">
+
+            <div>
+
+                <label>
+                    Forecast Period
+                </label>
+
+                <select>
+
+                    <option>
+                        3 Months
+                    </option>
+
+                    <option selected>
+                        6 Months
+                    </option>
+
+                    <option>
+                        9 Months
+                    </option>
+
+                    <option>
+                        12 Months
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Prediction Model
+                </label>
+
+                <select>
+
+                    <option>
+                        Linear Regression
+                    </option>
+
+                    <option>
+                        Time Series
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Export
+                </label>
+
+                <button>
+                    ⬇ Download Forecast
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ===== KPI CARDS ===== -->
+
+        <section class="kpi-grid">
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <h3>
+                        Total Sales
+                    </h3>
+
+                    <p>
+                        ₹8,25,000
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon">
+                    📊
+                </div>
+
+                <div>
+
+                    <h3>
+                        Average Sales
+                    </h3>
+
+                    <p>
+                        ₹27,500
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon">
+                    🚀
+                </div>
+
+                <div>
+
+                    <h3>
+                        Highest Sales
+                    </h3>
+
+                    <p>
+                        ₹43,000
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon">
+                    🔮
+                </div>
+
+                <div>
+
+                    <h3>
+                        Next Forecast
+                    </h3>
+
+                    <p>
+                        ₹44,500
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon">
+                    🎯
+                </div>
+
+                <div>
+
+                    <h3>
+                        Accuracy
+                    </h3>
+
+                    <p>
+                        94.6%
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ===== HISTORICAL CHART ===== -->
+
+        <section class="chart-card">
+
+            <h2>
+                📈 Historical Sales Trend
+            </h2>
+
+            <p class="description">
+                Monthly sales performance
+            </p>
+
+            <canvas id="salesChart"></canvas>
+
+        </section>
+
+
+        <!-- ===== CHART GRID ===== -->
+
+        <section class="chart-grid">
+
+
+            <div class="chart-card">
+
+                <h2>
+                    🎯 Actual vs Predicted
+                </h2>
+
+                <p class="description">
+                    Comparison between actual
+                    and predicted sales
+                </p>
+
+                <canvas id="predictionChart"></canvas>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <h2>
+                    🔮 Future Forecast
+                </h2>
+
+                <p class="description">
+                    Expected future sales
+                </p>
+
+                <canvas id="forecastChart"></canvas>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ===== MODEL PERFORMANCE ===== -->
+
+        <section class="performance-section">
+
+            <h2>
+                🎯 Model Performance
+            </h2>
+
+
+            <div class="performance-grid">
+
+
+                <div class="performance-card">
+
+                    <span>
+                        MAE
+                    </span>
+
+                    <strong>
+                        ₹1,240
+                    </strong>
+
+                    <small>
+                        Mean Absolute Error
+                    </small>
+
+                </div>
+
+
+                <div class="performance-card">
+
+                    <span>
+                        RMSE
+                    </span>
+
+                    <strong>
+                        ₹1,580
+                    </strong>
+
+                    <small>
+                        Root Mean Squared Error
+                    </small>
+
+                </div>
+
+
+                <div class="performance-card">
+
+                    <span>
+                        R² Score
+                    </span>
+
+                    <strong>
+                        0.94
+                    </strong>
+
+                    <small>
+                        Model Fit
+                    </small>
+
+                </div>
+
+
+                <div class="performance-card">
+
+                    <span>
+                        MAPE
+                    </span>
+
+                    <strong>
+                        5.4%
+                    </strong>
+
+                    <small>
+                        Prediction Error
+                    </small>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ===== BUSINESS INSIGHTS ===== -->
+
+        <section class="insights-section">
+
+            <h2>
+                💡 Business Insights
+            </h2>
+
+
+            <div class="insights-grid">
+
+
+                <div class="insight-card">
+
+                    <div class="insight-icon">
+                        📈
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Sales Trend
+                        </h3>
+
+                        <p>
+                            Sales show a consistent
+                            upward trend over the
+                            historical period.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="insight-card">
+
+                    <div class="insight-icon">
+                        💰
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Revenue Opportunity
+                        </h3>
+
+                        <p>
+                            Future sales are expected
+                            to increase, creating an
+                            opportunity for business growth.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="insight-card">
+
+                    <div class="insight-icon">
+                        🎯
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Model Performance
+                        </h3>
+
+                        <p>
+                            The regression model provides
+                            a strong fit to the historical
+                            sales trend.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="insight-card">
+
+                    <div class="insight-icon">
+                        📢
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Recommendation
+                        </h3>
+
+                        <p>
+                            Increase inventory and marketing
+                            efforts to take advantage of
+                            expected sales growth.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ===== DATA TABLE ===== -->
+
+        <section class="table-card">
+
+            <h2>
+                📋 Historical Dataset
+            </h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Sales
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                Jan 2026
+                            </td>
+
+                            <td>
+                                ₹35,500
+                            </td>
+
+                            <td>
+                                📈 Increasing
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Feb 2026
+                            </td>
+
+                            <td>
+                                ₹37,000
+                            </td>
+
+                            <td>
+                                📈 Increasing
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Mar 2026
+                            </td>
+
+                            <td>
+                                ₹38,500
+                            </td>
+
+                            <td>
+                                📈 Increasing
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Apr 2026
+                            </td>
+
+                            <td>
+                                ₹40,000
+                            </td>
+
+                            <td>
+                                📈 Increasing
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                May 2026
+                            </td>
+
+                            <td>
+                                ₹41,500
+                            </td>
+
+                            <td>
+                                📈 Increasing
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Jun 2026
+                            </td>
+
+                            <td>
+                                ₹43,000
+                            </td>
+
+                            <td>
+                                📈 Increasing
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ===== FOOTER ===== -->
+
+    <footer>
+
+        <p>
+            Predictive Analytics Using Historical Data
+        </p>
+
+        <p>
+            Built with HTML, CSS, JavaScript & Chart.js
+        </p>
+
+    </footer>
+
+
+    <!-- ===== CHART JAVASCRIPT ===== -->
+
+    <script>
+
+        const months = [
+
+            "Jan 2026",
+            "Feb 2026",
+            "Mar 2026",
+            "Apr 2026",
+            "May 2026",
+            "Jun 2026"
+
+        ];
+
+
+        const sales = [
+
+            35500,
+            37000,
+            38500,
+            40000,
+            41500,
+            43000
+
+        ];
+
+
+        const predicted = [
+
+            35700,
+            37100,
+            38600,
+            40100,
+            41600,
+            43200
+
+        ];
+
+
+        const forecast = [
+
+            44500,
+            46000,
+            47600,
+            49200,
+            50900,
+            52600
+
+        ];
+
+
+        /* Historical Chart */
+
+        new Chart(
+
+            document.getElementById(
+                "salesChart"
+            ),
+
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: months,
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Historical Sales",
+
+                            data:
+                                sales,
+
+                            borderWidth: 3,
+
+                            tension: 0.3,
+
+                            fill: true
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    plugins: {
+
+                        legend: {
+                            display: true
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+        /* Prediction Chart */
+
+        new Chart(
+
+            document.getElementById(
+                "predictionChart"
+            ),
+
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: months,
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Actual Sales",
+
+                            data:
+                                sales,
+
+                            borderWidth: 3,
+
+                            tension: 0.3
+
+                        },
+
+                        {
+
+                            label:
+                                "Predicted Sales",
+
+                            data:
+                                predicted,
+
+                            borderWidth: 3,
+
+                            borderDash:
+                                [7,5],
+
+                            tension: 0.3
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true
+
+                }
+
+            }
+
+        );
+
+
+        /* Forecast Chart */
+
+        new Chart(
+
+            document.getElementById(
+                "forecastChart"
+            ),
+
+            {
+
+                type: "line",
+
+                data: {
+
+                    labels: [
+
+                        ...months,
+
+                        "Jul 2026",
+                        "Aug 2026",
+                        "Sep 2026",
+                        "Oct 2026",
+                        "Nov 2026",
+                        "Dec 2026"
+
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Historical",
+
+                            data: [
+
+                                ...sales,
+
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+
+                            ],
+
+                            borderWidth: 3,
+
+                            tension: 0.3
+
+                        },
+
+                        {
+
+                            label:
+                                "Forecast",
+
+                            data: [
+
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+
+                                43000,
+
+                                ...forecast
+
+                            ],
+
+                            borderWidth: 3,
+
+                            borderDash:
+                                [8,5],
+
+                            tension: 0.3
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true
+
+                }
+
+            }
+
+        );
+
+    </script>
+
+
+</body>
+
+</html>
